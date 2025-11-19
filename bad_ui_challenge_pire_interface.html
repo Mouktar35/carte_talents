@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bad UI Challenge — La Pire Interface Possible</title>
+  <style>
+    /* Typographie et couleurs horribles */
+    html,body{height:100%;margin:0;padding:0;font-family: 'Comic Sans MS', 'Comic Sans', cursive;}
+    body{
+      background: repeating-linear-gradient(45deg, #ff00ff 0 10px, #00ffff 10px 20px, #ffff00 20px 30px);
+      color:#001100;
+      overflow:hidden; /* empeche de scroller proprement */
+    }
+
+    /* Barre du haut intrusif */
+    #topbar{
+      height:120px;
+      line-height:120px;
+      background:linear-gradient(90deg,#00ff00,#ff0000);
+      color:white;
+      text-align:center;
+      font-size:34px;
+      position:fixed;left:0;right:0;top:0;z-index:9999;
+      box-shadow:0 0 40px #000;
+      transform:skewY(-5deg);
+    }
+
+    /* Contenu décalé sous la barre qui change de position */
+    #container{position:absolute;top:100px;left:10%;width:80%;height:80%;overflow:auto;padding:40px;}
+
+    .card{background:rgba(255,255,255,0.9);border:6px dashed #000;margin:20px;padding:20px;box-shadow:8px 8px 0 #222;}
+
+    /* Boutons ridiculement petits ou énormes */
+    .tiny-btn{font-size:6px;padding:2px 4px}
+    .huge-btn{font-size:40px;padding:20px 40px}
+
+    /* Animations lentes et rapides à la fois */
+    .blink{animation:blink 0.3s steps(2) infinite}
+    @keyframes blink{50%{opacity:0}}
+
+    .slow-rotate{animation:rotate 30s linear infinite}
+    @keyframes rotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+    /* Popups intrusifs */
+    .popup{position:fixed;bottom:10px;right:10px;background:rgba(0,0,0,0.8);color:#fff;padding:12px;border-radius:6px;z-index:99999}
+
+    /* Formulaire avec placeholder trompeur */
+    label{display:block;margin:12px 0 6px}
+    input, textarea, select{padding:10px;border:3px solid #000;background:linear-gradient(#fff,#eee);width:100%}
+
+    /* Curseur étrange */
+    .weird-cursor{cursor:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="20" font-size="20">✖</text></svg>') 16 16, auto}
+
+    /* A11y nightmare: tiny low-contrast footer */
+    footer{position:fixed;left:0;right:0;bottom:0;height:30px;background:#111;color:#111;text-align:center;line-height:30px}
+
+    /* Fake loading overlay */
+    #loading{position:fixed;inset:0;background:rgba(255,255,255,0.95);display:flex;align-items:center;justify-content:center;z-index:999999}
+    .loader{width:150px;height:150px;border-radius:50%;border:20px solid #f00;border-top-color:#0f0;animation:spin 2s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Horrible grid that breaks on resize */
+    .grid{display:grid;grid-template-columns:1fr 2fr 1fr;gap:20px}
+    @media (max-width:800px){.grid{grid-template-columns:repeat(5,100px);transform:translateX(-60px)}}
+
+    /* Hidden accessible text to confuse screenreaders */
+    .sr-only{position:absolute;left:-9999px}
+  </style>
+</head>
+<body class="weird-cursor">
+  <div id="topbar">BAD · UI · CHALLENGE — Cliquez n'importe où</div>
+
+  <div id="container">
+    <div class="card grid">
+      <div>
+        <h2 class="blink">Bienvenue</h2>
+        <p>Ce site est l'exemple volontaire d'une interface terrible. Les éléments bougent, les actions sont inversées, et rien n'est intuitif.</p>
+        <button class="tiny-btn" id="btn-tiny">Tiny</button>
+        <button class="huge-btn" id="btn-huge">GROS BOUTON</button>
+        <button id="btn-inverse">Annuler</button>
+      </div>
+
+      <div>
+        <h3>Formulaire trompeur</h3>
+        <form id="bad-form">
+          <label for="name">Nom (ne pas remplir)</label>
+          <input id="name" placeholder="Tapez votre mail ici" />
+
+          <label for="email">Email (obligatoire)</label>
+          <input id="email" placeholder="Votre nom complet" />
+
+          <label for="desc">Description</label>
+          <textarea id="desc" rows="3">Entrez une description, elle sera effacée au focus.</textarea>
+
+          <label for="choice">Choix (aucun sens)</label>
+          <select id="choice">
+            <option>Option A</option>
+            <option selected>Option B — recommandé</option>
+            <option>Option C</option>
+          </select>
+
+          <div style="margin-top:12px">
+            <button id="submit">Envoyer</button>
+            <button id="cancel">OK</button>
+          </div>
+        </form>
+      </div>
+
+      <div>
+        <h3>Contenu flottant</h3>
+        <div class="card slow-rotate" style="padding:12px">Carte qui tourne lentement</div>
+        <p>Cliquer sur <a href="#" id="trap-link">ce lien</a> ouvrira des surprises.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="blink">Notifications</h3>
+      <p id="msgs">0 messages</p>
+      <button id="spam">Afficher popups</button>
+    </div>
+
+    <div class="card">
+      <h3>Zone de test clavier</h3>
+      <p>Appuyez sur la touche Entrée plusieurs fois.</p>
+      <input id="keyboard-trap" placeholder="Tapez ici puis perdez le focus" />
+    </div>
+
+  </div>
+
+  <div id="loading" aria-hidden="true">
+    <div>
+      <div class="loader"></div>
+      <p style="text-align:center;margin-top:10px;font-weight:bold">Chargement… (ou pas)</p>
+    </div>
+  </div>
+
+  <footer>© Confidential — Cliquer ici ne fait rien</footer>
+
+  <div class="popup" id="popup-1" style="display:none">Pop-up : vous avez gagné un point !</div>
+
+  <audio id="annoy-audio" loop>
+    <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=" type="audio/wav">
+  </audio>
+
+  <script>
+    // Comportements volontairement stupides
+
+    // Topbar qui change aléatoirement de position
+    (function(){
+      const top=document.getElementById('topbar');
+      setInterval(()=>{
+        top.style.left = (Math.random()*20 -10) + '%';
+        top.style.transform = 'skewY(' + ((Math.random()*10)-5) + 'deg)';
+      },2200);
+    })();
+
+    // Enlever le loader après un bon moment (ou pas)
+    setTimeout(()=>{
+      const l=document.getElementById('loading');
+      l.style.display = 'none';
+    }, 4200);
+
+    // Bouton inverse: le bouton "Annuler" fera une vraie soumission (simulée)
+    document.getElementById('btn-inverse').addEventListener('click', function(e){
+      e.preventDefault();
+      alert('Action INVERSE : Sauvegarde effectuée (haha)');
+    });
+
+    // Formulaire qui efface le champ au focus et inverse les boutons
+    const name = document.getElementById('name');
+    const email = document.getElementById('email');
+    const desc = document.getElementById('desc');
+
+    name.addEventListener('focus', ()=>{name.value=''; name.placeholder='Oops !';});
+    email.addEventListener('focus', ()=>{email.value=''; email.placeholder='Ne mettez pas d\'email vrai';});
+    desc.addEventListener('focus', ()=>{desc.value=''; setTimeout(()=>{desc.value='(effacé intentionnellement)';},1500)});
+
+    document.getElementById('bad-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      confirm('Êtes-vous sûr de vouloir QUITTER sans rien sauver ?');
+      alert('Formulaire soumis — merci pour rien.');
+    });
+
+    // Trap de lien
+    document.getElementById('trap-link').addEventListener('click', function(e){
+      e.preventDefault();
+      for(let i=0;i<5;i++){
+        const p = document.createElement('div');
+        p.className = 'popup'; p.textContent = 'Surprise #' + (i+1);
+        p.style.right = (10 + i*120) + 'px'; p.style.bottom = (10 + i*50) + 'px';
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(),5000 + i*2000);
+      }
+    });
+
+    // Popups spam
+    document.getElementById('spam').addEventListener('click', function(){
+      const audio=document.getElementById('annoy-audio');
+      audio.play().catch(()=>{});
+      let count=0;
+      const id=setInterval(()=>{
+        const p=document.createElement('div'); p.className='popup'; p.textContent='Notification inutile ' + (++count);
+        p.style.right = Math.random()*80 + 'px'; p.style.bottom = Math.random()*60 + 'px';
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(),3000);
+        document.getElementById('msgs').textContent = count + ' messages';
+        if(count>12) clearInterval(id);
+      },400);
+    });
+
+    // Boutons taille
+    document.getElementById('btn-tiny').addEventListener('click', ()=>alert('Vous avez cliqué sur un bouton MINUSCULE.'));
+    document.getElementById('btn-huge').addEventListener('click', ()=>alert('BOUM — bouton énorme.'));
+
+    // Piège clavier: enfouir le focus
+    (function(){
+      const trap=document.getElementById('keyboard-trap');
+      trap.addEventListener('keydown', function(e){
+        if(e.key === 'Enter'){
+          e.preventDefault();
+          alert('Entrée piégée — focus repris');
+          trap.blur();
+          trap.focus();
+        }
+      });
+    })();
+
+    // Empêcher le clic droit et sélection
+    document.addEventListener('contextmenu', e=>{e.preventDefault(); alert('Clic droit désactivé !');});
+    document.addEventListener('selectstart', e=>{e.preventDefault();});
+
+    // Déplacement du footer quand on clique dessus
+    document.querySelector('footer').addEventListener('click', function(){
+      this.style.left = (Math.random()*40 - 20) + '%';
+      alert('Rien à voir ici.');
+    });
+
+    // Petit clin d'oeil: changement de sonnerie toutes les secondes quand audio joue
+    const audio=document.getElementById('annoy-audio');
+    let tone=0;
+    setInterval(()=>{
+      if(!audio.paused){ tone = (tone+1)%3; /* changer src si on avait plusieurs sons */ }
+    },1000);
+
+    // Simuler un bug: certains éléments se déplacent au hover
+    document.querySelectorAll('.card').forEach(c=>{
+      c.addEventListener('mouseover', ()=>{c.style.marginTop = (Math.random()*60 - 30) + 'px'});
+      c.addEventListener('mouseout', ()=>{c.style.marginTop = '20px'});
+    });
+
+    // Accessibilité volontairement cassée: alt manquants, ordre tab bizarroïde
+    // (intentionnellement rien à faire ici)
+
+  // --- Anti-patterns supplémentaires ---
+// Clavier qui vole (input se déplace quand on tape)
+(function(){
+  const trap = document.getElementById('keyboard-trap');
+  trap.addEventListener('input', ()=>{
+    trap.style.position = 'relative';
+    trap.style.left = (Math.random()*40 - 20) + 'px';
+    trap.style.top = (Math.random()*40 - 20) + 'px';
+  });
+})();
+
+// Formulaire qui perd les données aléatoirement
+setInterval(()=>{
+  const f = document.getElementById('bad-form');
+  if(Math.random() < 0.25){
+    [...f.querySelectorAll('input,textarea')].forEach(el=>el.value='');
+    console.log('Perte de données simulée');
+  }
+}, 6000);
+
+// Piège navigation : le bouton retour est intercepté
+window.onbeforeunload = function(){
+  return 'Êtes-vous sûr de quitter ? (Vous reviendrez quand même)';
+};
+
+// Lien qui redirige vers une page aléatoire
+const randomPages = ['https://example.com','https://google.com','https://youtube.com'];
+document.getElementById('trap-link').addEventListener('dblclick', ()=>{
+  window.location = randomPages[Math.floor(Math.random()*randomPages.length)];
+});
+
+</script>
+</body>
+</html>
