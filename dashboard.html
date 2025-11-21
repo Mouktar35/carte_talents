@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        
+
+body {
+    background: linear-gradient(135deg, yellow, pink, lime, cyan, magenta);
+    font-family: "Comic Sans MS", cursive;
+    color: red;
+    margin: 0;
+    padding: 0;
+    text-shadow: 3px 3px blue;
+    cursor: crosshair;
+}
+
+#menu {
+    width: 250px;
+    background-color: lime;
+    height: 100vh;
+    padding: 20px;
+    float: left;
+    border-right: 10px dashed red;
+}
+
+#menu button {
+    display: block;
+    width: 100%;
+    margin: 15px 0;
+    font-size: 28px;
+    background-color: orange;
+    color: purple;
+    border: 6px dotted blue;
+    text-shadow: 2px 2px yellow;
+    cursor: pointer;
+}
+
+#content {
+    margin-left: 270px;
+    padding: 30px;
+}
+
+h1, h2 {
+    color: magenta;
+    font-size: 60px;
+    text-shadow: 4px 4px cyan, -2px -2px yellow;
+    transform: rotate(1deg);
+}
+
+table {
+    width: 95%;
+    border: 8px double red;
+    background-color: pink;
+    font-size: 22px;
+}
+
+th {
+    background-color: cyan;
+    color: red;
+    border: 4px groove purple;
+    padding: 12px;
+}
+
+td {
+    border: 3px dotted blue;
+    padding: 10px;
+}
+
+input {
+    width: 92%;
+    padding: 12px;
+    margin: 6px 0;
+    font-size: 20px;
+    border: 5px solid green;
+    background-color: yellow;
+    color: purple;
+}
+
+.add-btn {
+    background-color: cyan;
+    color: red;
+    border: 6px solid orange;
+    font-size: 22px;
+    padding: 12px;
+    cursor: pointer;
+    transform: rotate(-1deg);
+}
+
+.logout-btn{
+
+            background: rgb(64, 0, 255);
+            border: 4px solid purple;
+            font-size: 25px;
+            padding: 10px 20px;    
+
+}
+
+    </style>
+</head>
+<body>
+
+    
+    <div id="menu">
+        <button onclick="show('eleves')">Élèves</button>
+        <button onclick="show('prof')">Professeurs</button>
+        <button onclick="show('classes')">Classes</button>
+        <button onclick="show('notes')">Notes</button>
+        <button onclick="show('absences')">Absences</button>
+    </div>
+
+    
+    <div id="content">
+        <h1 style="font-size:50px; color:red;">Dashboard École (BAD UI)</h1>
+        <div id="result"></div>
+    </div>
+    <button class="logout-btn" onclick="logout()">Déconnexion</button>
+
+    <script>
+        let eleves = [];
+        let profs = [];
+        let classes = [];
+        let notes = [];
+        let absences = [];
+
+        function show(type) {
+            let html = "";
+
+           
+            if (type === "eleves") {
+                html = `
+                    <h2>Ajouter un élève</h2>
+                    <div class="form-box">
+                        <input id="eleve_nom" placeholder="Nom élève">
+                        <input id="eleve_classe" placeholder="Classe">
+                        <input id="eleve_age" placeholder="Age">
+                        <button class="add-btn" onclick="addEleve()">Ajouter</button>
+                    </div>
+
+                    <h2>Liste des élèves</h2>
+                    <table>
+                        <tr><th>Nom</th><th>Classe</th><th>Age</th></tr>
+                        ${eleves.map(e => `<tr><td>${e.nom}</td><td>${e.classe}</td><td>${e.age}</td></tr>`).join("")}
+                    </table>
+                `;
+            }
+
+           
+            if (type === "prof") {
+                html = `
+                    <h2>Ajouter un professeur</h2>
+                    <div class="form-box">
+                        <input id="prof_nom" placeholder="Nom professeur">
+                        <input id="prof_matiere" placeholder="Matière">
+                        <button class="add-btn" onclick="addProf()">Ajouter</button>
+                    </div>
+
+                    <h2>Liste des professeurs</h2>
+                    <table>
+                        <tr><th>Nom</th><th>Matière</th></tr>
+                        ${profs.map(p => `<tr><td>${p.nom}</td><td>${p.matiere}</td></tr>`).join("")}
+                    </table>
+                `;
+            }
+
+            
+            if (type === "classes") {
+                html = `
+                    <h2>Ajouter une classe</h2>
+                    <div class="form-box">
+                        <input id="class_nom" placeholder="Nom de la classe">
+                        <input id="class_effectif" placeholder="Effectif">
+                        <button class="add-btn" onclick="addClasse()">Ajouter</button>
+                    </div>
+
+                    <h2>Liste des classes</h2>
+                    <table>
+                        <tr><th>Classe</th><th>Effectif</th></tr>
+                        ${classes.map(c => `<tr><td>${c.nom}</td><td>${c.effectif}</td></tr>`).join("")}
+                    </table>
+                `;
+            }
+
+            
+            if (type === "notes") {
+                html = `
+                    <h2>Ajouter une note</h2>
+                    <div class="form-box">
+                        <input id="note_eleve" placeholder="Nom élève">
+                        <input id="note_matiere" placeholder="Matière">
+                        <input id="note_valeur" placeholder="Note">
+                        <button class="add-btn" onclick="addNote()">Ajouter</button>
+                    </div>
+
+                    <h2>Liste des notes</h2>
+                    <table>
+                        <tr><th>Élève</th><th>Matière</th><th>Note</th></tr>
+                        ${notes.map(n => `<tr><td>${n.eleve}</td><td>${n.matiere}</td><td>${n.valeur}</td></tr>`).join("")}
+                    </table>
+                `;
+            }
+
+            if (type === "absences") {
+                html = `
+                    <h2>Ajouter une absence</h2>
+                    <div class="form-box">
+                        <input id="abs_eleve" placeholder="Nom élève">
+                        <input id="abs_jour" placeholder="Nombre de jours">
+                        <button class="add-btn" onclick="addAbs()">Ajouter</button>
+                    </div>
+
+                    <h2>Liste des absences</h2>
+                    <table>
+                        <tr><th>Élève</th><th>Jours d'absence</th></tr>
+                        ${absences.map(a => `<tr><td>${a.eleve}</td><td>${a.jours}</td></tr>`).join("")}
+                    </table>
+                `;
+            }
+
+            document.getElementById("result").innerHTML = html;
+        }
+
+        
+
+        function addEleve() {
+            eleves.push({
+                nom: document.getElementById("eleve_nom").value,
+                classe: document.getElementById("eleve_classe").value,
+                age: document.getElementById("eleve_age").value
+            });
+            show("eleves");
+        }
+
+        function addProf() {
+            profs.push({
+                nom: document.getElementById("prof_nom").value,
+                matiere: document.getElementById("prof_matiere").value
+            });
+            show("prof");
+        }
+
+        function addClasse() {
+            classes.push({
+                nom: document.getElementById("class_nom").value,
+                effectif: document.getElementById("class_effectif").value
+            });
+            show("classes");
+        }
+
+        function addNote() {
+            notes.push({
+                eleve: document.getElementById("note_eleve").value,
+                matiere: document.getElementById("note_matiere").value,
+                valeur: document.getElementById("note_valeur").value
+            });
+            show("notes");
+        }
+
+        function addAbs() {
+            absences.push({
+                eleve: document.getElementById("abs_eleve").value,
+                jours: document.getElementById("abs_jour").value
+            });
+            show("absences");
+        }
+
+        function logout() {
+           
+            window.location.href = "login.html";
+        }
+
+    </script>
+
+</body>
+</html>
