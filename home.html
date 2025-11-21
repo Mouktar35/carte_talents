@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mauvaise Accueil</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="ugly-bg2">
+
+    <h1 class="title">🏚️ Tableau de Bord (😆😆) 🏚️</h1>
+
+    <p class="info">
+        Bonjour <span id="userDisplay"></span> !  
+        Voici vos informations ultra sécurisées 🔐 (pas du tout).
+    </p>
+
+    <div class="fake-info">
+        <p>💰 Solde bancaire : <b style="color:red;">- 987 654,32 MRU</b></p>
+        <p>🏦 Prêt en attente : <b>1 000 000 MRU</b></p>
+        <p>🚨 Alerte : Vous devez payer avant <b>hier</b>.</p>
+        <p>🤖 Statut IA : “Vous êtes probablement un robot”</p>
+        <p>🌡 Température de votre PC : <b>289°C</b></p>
+    </div>
+
+    <button onclick="location.href='index.html'" class="back-btn">🔙 Retour</button>
+
+    <script>
+        document.getElementById("userDisplay").innerText =
+            localStorage.getItem("username") || "Utilisateur inconnu";
+    </script>
+
+</body>
+</html>
