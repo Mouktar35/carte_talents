@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+* { cursor: none; }
+body {
+  font-family: 'Comic Sans MS', cursive;
+  background: olive;
+  margin: 0;
+  padding: 20px;
+  overflow-x: hidden;
+}
+.custom-cursor {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  background: red;
+  border: 4px solid darkred;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px red;
+}
+h1 {
+  color: brown;
+  text-align: right;
+  font-size: 14px;
+  text-decoration: line-through overline;
+  letter-spacing: -2px;
+  direction: rtl;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+}
+.form-section {
+  background: tan;
+  padding: 15px;
+  margin: 10px;
+  border: 8px dotted purple;
+  transform: rotate(-2deg);
+}
+label {
+  color: darkgoldenrod;
+  font-size: 9px;
+  display: block;
+  text-align: right;
+  text-transform: uppercase;
+  word-spacing: 15px;
+}
+input[type="text"], input[type="email"], input[type="password"] {
+  width: 80px;
+  height: 15px;
+  font-size: 10px;
+  border: 3px solid teal;
+  background: lightyellow;
+  color: black;
+  margin-left: auto;
+  display: block;
+  transition: all 0.3s;
+}
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+  transform: translateX(-250px) rotate(10deg);
+  background: lightcoral;
+  border-color: red;
+}
+.password-field {
+  letter-spacing: 20px;
+  direction: rtl;
+}
+button {
+  background: crimson;
+  color: white;
+  border: 3px solid darkred;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  position: relative;
+  transition: all 0.05s;
+  cursor: none;
+}
+button:hover {
+  transform: translate(150px, 80px) rotate(180deg);
+  background: darkred;
+}
+.checkbox-hell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
+}
+.checkbox-hell label {
+  font-size: 7px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  height: 100px;
+}
+.checkbox-hell input {
+  opacity: 0.1;
+  transform: scale(0.3);
+}
+select {
+  width: 300px;
+  font-size: 8px;
+  background: darkseagreen;
+  color: darkolivegreen;
+  border: 4px ridge sienna;
+}
+select option { font-family: 'Wingdings', fantasy; }
+.important-text {
+  font-size: 7px;
+  color: rosybrown;
+  background: peru;
+  padding: 5px;
+  text-align: justify;
+  line-height: 0.8;
+  word-break: break-all;
+  transform: scaleX(-1);
+}
+.captcha-box {
+  background: white;
+  padding: 15px;
+  font-size: 24px;
+  letter-spacing: 15px;
+  color: black;
+  font-style: italic;
+  font-weight: bold;
+  text-shadow: 3px 3px 0 gray;
+  user-select: none;
+  border: 3px solid black;
+  display: inline-block;
+}
+.volume-slider {
+  writing-mode: vertical-rl;
+  height: 200px;
+  transform: rotate(180deg);
+  accent-color: maroon;
+}
+.fake-link {
+  color: brown;
+  text-decoration: none;
+  cursor: none;
+}
+.fake-link:hover::after {
+  content: " (Ce n'est pas un lien)";
+  font-size: 6px;
+}
+.real-link {
+  color: saddlebrown;
+  text-decoration: none;
+}
+.popup {
+  position: fixed;
+  background: yellow;
+  border: 5px solid red;
+  padding: 20px;
+  z-index: 1000;
+  font-size: 14px;
+  max-width: 200px;
+  box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+}
+.popup .close-btn {
+  font-size: 14px;
+  color: white;
+  background: red;
+  padding: 5px 10px;
+  cursor: none;
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+}
+.progress-bar {
+  width: 100%;
+  height: 5px;
+  background: dimgray;
+  margin: 10px 0;
+}
+.progress-fill {
+  height: 100%;
+  background: darkslategray;
+  width: 73%;
+  animation: regress 3s infinite;
+}
+@keyframes regress {
+  0% { width: 73%; }
+  50% { width: 20%; }
+  100% { width: 73%; }
+}
+.time-display {
+  font-family: monospace;
+  font-size: 20px;
+  color: sienna;
+  animation: shake 0.1s infinite;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px) rotate(2deg); }
+  75% { transform: translateX(5px) rotate(-2deg); }
+}
+.tooltip {
+  position: relative;
+}
+.tooltip:hover::after {
+  content: attr(data-wrong);
+  position: absolute;
+  background: indianred;
+  color: salmon;
+  padding: 5px;
+  font-size: 8px;
+  white-space: nowrap;
+  top: -30px;
+  left: 200px;
+}
+.nav-menu {
+  display: flex;
+  gap: 5px;
+  font-size: 8px;
+}
+.nav-menu span {
+  background: darkkhaki;
+  padding: 2px 5px;
+  color: olive;
+}
+.scroll-container {
+  height: 60px;
+  overflow: auto;
+  direction: rtl;
+  background: tan;
+}
+.scroll-container::-webkit-scrollbar { width: 50px; }
+.scroll-container::-webkit-scrollbar-thumb { background: burlywood; }
+.invisible-text {
+  color: olive;
+  background: olive;
+  padding: 10px;
+  font-size: 12px;
+}
+.invisible-text::selection {
+  background: maroon;
+  color: olive;
+}
+</style>
+</head>
+<body>
+
+<div class="custom-cursor" id="cursor"></div>
+
+<div class="popup" id="popup1" style="top:10%;left:60%;">
+  <b>⚠ ATTENTION!</b><br>Votre patience est à 27%!<br>
+  <span class="close-btn" onclick="this.parentElement.style.top=Math.random()*60+'%';this.parentElement.style.left=Math.random()*60+'%'">❌ FERMER (ou pas)</span>
+</div>
+
+<div class="popup" id="popup2" style="top:50%;left:10%;">
+  <b>🚨 ERREUR 404</b><br>Succès trouvé par accident!<br>
+  <span class="close-btn" onclick="this.parentElement.style.left=Math.random()*60+'%';this.parentElement.style.top=Math.random()*60+'%'">❌ FERMER</span>
+</div>
+
+<h1>!!! BIENVENUE SUR LE MEILLEUR SITE DU MONDE !!!</h1>
+
+<div class="nav-menu">
+  <span onclick="alert('Non.')">Accueil</span>
+  <span onclick="alert('Peut-être.')">Contact</span>
+  <span onclick="alert('Jamais.')">À propos</span>
+  <span onclick="alert('Erreur.')">Services</span>
+</div>
+
+<div class="time-display" id="time">00:00:00</div>
+<p style="font-size:7px;color:darkgray;">Temps restant avant fermeture automatique</p>
+
+<div class="progress-bar"><div class="progress-fill"></div></div>
+<p style="font-size:6px;color:peru;">Chargement de rien du tout...</p>
+
+<div class="container">
+  <div class="form-section">
+    <h2 style="font-size:10px;color:sienna;text-align:center;">FORMULAIRE D'INSCRIPTION (obligatoire)</h2>
+    
+    <label class="tooltip" data-wrong="Ceci n'est pas votre nom">ENTREZ VOTRE NOM COMPLET ICI MAINTENANT</label>
+    <input type="text" placeholder=".">
+    
+    <label style="transform:rotate(5deg);">COURRIEL ÉLECTRONIQUE NUMÉRIQUE</label>
+    <input type="email" class="password-field">
+    
+    <label>MOT DE PASSE (minimum 47 caractères)</label>
+    <input type="text" placeholder="Visible pour votre sécurité">
+    
+    <label>CONFIRMEZ EN TAPANT DIFFÉREMMENT</label>
+    <input type="password" class="password-field">
+  </div>
+
+  <div class="form-section" style="transform:rotate(1deg);">
+    <h3 style="font-size:9px;color:darkgoldenrod;">Sélectionnez TOUS vos centres d'intérêt:</h3>
+    <div class="checkbox-hell">
+      <label><input type="checkbox" checked disabled>Respirer</label>
+      <label><input type="checkbox">Cligner des yeux</label>
+      <label><input type="checkbox" checked>Accepter les cookies</label>
+      <label><input type="checkbox">Refuser (indisponible)</label>
+      <label><input type="checkbox">Autre (précisez pas)</label>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <label>CHOISISSEZ VOTRE PAYS:</label>
+    <select id="country">
+      <option>🎭 Narnia</option>
+      <option>🌙 La Lune</option>
+      <option selected>⚠ ERREUR_404</option>
+      <option>🦆 Canardistan</option>
+      <option>📎 Bureau de Clippy</option>
+    </select>
+    
+    <br><br>
+    <label>VOLUME DU SITE WEB:</label>
+    <input type="range" class="volume-slider" min="0" max="100" value="50" 
+           oninput="alert('🔊 Volume: ' + this.value + '%\n(Ce slider ne fait rien du tout)')">
+  </div>
+
+  <div class="form-section">
+    <p class="captcha-box" id="captcha">X7qZ</p>
+    <label style="color:crimson;font-size:12px;">⚠ RECOPIEZ LE CAPTCHA (il change à chaque frappe!)</label>
+    <input type="text" style="width:100px;background:lightyellow;" onkeyup="document.getElementById('captcha').innerText=Math.random().toString(36).substr(2,4);this.style.background='lightcoral'">
+  </div>
+
+  <div class="important-text">
+    En cliquant sur le bouton ci-dessous, vous acceptez que nous vendions vos données à des extraterrestres, 
+    que nous utilisions votre âme comme combustible et que nous vous envoyions 847 emails par jour. 
+    Vous renoncez également à votre droit de vous plaindre. Ce texte est volontairement illisible.
+  </div>
+
+  <button id="submitBtn" onclick="alert('ERREUR: Succès!')">
+    SOUMETTRE VOTRE ÂME
+  </button>
+
+  <div class="scroll-container">
+    <p style="width:1000px;font-size:8px;color:saddlebrown;">
+      ← Faites défiler horizontalement dans un conteneur vertical pour lire les conditions d'utilisation qui n'existent pas vraiment mais vous devez quand même les accepter sinon le bouton ne marchera pas sauf qu'il ne marche pas de toute façon donc c'est inutile de lire ceci félicitations vous avez perdu 30 secondes →
+    </p>
+  </div>
+
+  <div class="invisible-text">
+    TEXTE SECRET: Sélectionnez-moi si vous pouvez me voir (vous ne pouvez pas)
+  </div>
+
+  <p style="font-size:10px;">
+    <span class="fake-link">Cliquez ici pour de l'aide</span> | 
+    <span class="real-link" onclick="document.body.innerHTML='<h1 style=font-size:200px;color:maroon;>AU REVOIR</h1>'">Texte normal</span>
+  </p>
+</div>
+
+<script>
+document.addEventListener('mousemove', e => {
+  const c = document.getElementById('cursor');
+  setTimeout(() => {
+    c.style.left = e.pageX + 'px';
+    c.style.top = e.pageY + 'px';
+  }, 200);
+});
+
+let t = 300;
+setInterval(() => {
+  t = t > 0 ? t - 1 : 300;
+  const m = Math.floor(t / 60), s = t % 60;
+  document.getElementById('time').innerText = 
+    `00:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+}, 1000);
+
+setInterval(() => {
+  document.querySelectorAll('label').forEach(l => {
+    l.style.marginLeft = (Math.random() * 20 - 10) + 'px';
+  });
+}, 2000);
+
+document.addEventListener('selectstart', e => {
+  if (Math.random() > 0.5) e.preventDefault();
+});
+</script>
+
+</body>
+</html>
