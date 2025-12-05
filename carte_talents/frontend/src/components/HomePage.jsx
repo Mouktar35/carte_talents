@@ -34,7 +34,7 @@ export default function HomePage({ setView, getSkillCounts, stats }) {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 glass mb-8">
             <Sparkles className="w-4 h-4 text-primary-400" />
-            <span className="text-sm text-dark-300">Plateforme CESI - Nuit de l'Info 2024</span>
+            <span className="text-sm text-dark-300">Plateforme CESI - Nuit de l'Info 2025</span>
           </div>
 
           <h1 className="text-6xl md:text-8xl font-bold mb-6">
