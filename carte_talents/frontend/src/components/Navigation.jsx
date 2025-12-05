@@ -1,11 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Compass, Users2, Sparkles, Home, LogIn, LogOut } from 'lucide-react';
+import { Users, Compass, Users2, Sparkles, Home, LogIn, LogOut, Inbox, Bell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { collaborationAPI } from '../services/api';
 
 export default function Navigation({ currentView, setView }) {
   const { isAuthenticated, user, logout } = useAuth();
+  const [notificationCount, setNotificationCount] = useState(0);
   
+  // Charger le nombre de notifications
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadNotificationCount();
+      // Rafraîchir toutes les 30 secondes
+      const interval = setInterval(loadNotificationCount, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [isAuthenticated]);
+
+  const loadNotificationCount = async () => {
+    try {
+      const { count } = await collaborationAPI.getCount();
+      setNotificationCount(count);
+    } catch (err) {
+      console.error('Erreur chargement notifications:', err);
+    }
+  };
+
   const navItems = [
     { id: 'home', label: 'Accueil', icon: Home },
     { id: 'explore', label: 'Explorer', icon: Compass },
@@ -41,6 +62,30 @@ export default function Navigation({ currentView, setView }) {
               <span className="hidden sm:inline">{item.label}</span>
             </button>
           ))}
+          
+          {/* Inbox button avec badge */}
+          {isAuthenticated && (
+            <button
+              onClick={() => setView('inbox')}
+              className={`px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 transition-all relative ${
+                currentView === 'inbox'
+                  ? 'bg-primary-600/20 text-white border border-primary-500/30'
+                  : 'text-dark-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Inbox className="w-4 h-4" />
+              <span className="hidden sm:inline">Messages</span>
+              {notificationCount > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center font-bold"
+                >
+                  {notificationCount > 9 ? '9+' : notificationCount}
+                </motion.span>
+              )}
+            </button>
+          )}
         </div>
 
         <div className="flex items-center gap-3">
@@ -52,6 +97,7 @@ export default function Navigation({ currentView, setView }) {
               <button
                 onClick={logout}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-dark-400 hover:text-white hover:bg-white/5"
+                title="Déconnexion"
               >
                 <LogOut className="w-4 h-4" />
               </button>

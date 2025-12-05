@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import talentsRoutes from './routes/talents.js';
 import authRoutes from './routes/auth.js';
+import collaborationRoutes from './routes/collaboration.js';
 import { initDatabase } from './database/init.js';
 
 dotenv.config();
@@ -33,6 +34,7 @@ async function start() {
     // Routes (after DB init)
     app.use('/api/talents', talentsRoutes);
     app.use('/api/auth', authRoutes);
+    app.use('/api/collaboration', collaborationRoutes);
 
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);

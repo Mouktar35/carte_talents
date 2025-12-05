@@ -9,14 +9,15 @@ async function seed() {
   const db = getDb();
 
   // Créer un utilisateur admin
-  const hashedPassword = await bcrypt.hash('admin123', 10);
-  db.prepare('INSERT OR IGNORE INTO users (email, password, name) VALUES (?, ?, ?)').run('admin@cesi.fr', hashedPassword, 'Admin CESI');
+  const adminPassword = await bcrypt.hash('admin123', 10);
+  db.prepare('INSERT OR IGNORE INTO users (email, password, name) VALUES (?, ?, ?)').run('admin@cesi.fr', adminPassword, 'Admin CESI');
 
-  // Données des talents
+  // Données des talents avec leurs comptes utilisateurs
   const talentsData = [
     {
       name: 'Sophie Martin',
       email: 'sophie.martin@example.com',
+      password: 'sophie123',
       bio: "Développeuse Full Stack passionnée par l'UX/UI et l'accessibilité web.",
       location: 'Paris',
       linkedin: 'sophie-martin',
@@ -32,6 +33,7 @@ async function seed() {
     {
       name: 'Thomas Dubois',
       email: 'thomas.dubois@example.com',
+      password: 'thomas123',
       bio: "Data Scientist & Machine Learning Engineer passionné par l'IA.",
       location: 'Lyon',
       linkedin: 'thomas-dubois',
@@ -44,6 +46,7 @@ async function seed() {
     {
       name: 'Emma Lefebvre',
       email: 'emma.lefebvre@example.com',
+      password: 'emma123',
       bio: 'Designer UI/UX et illustratrice créative.',
       location: 'Bordeaux',
       linkedin: 'emma-lefebvre',
@@ -56,6 +59,7 @@ async function seed() {
     {
       name: 'Lucas Bernard',
       email: 'lucas.bernard@example.com',
+      password: 'lucas123',
       bio: 'Développeur Backend expert en microservices.',
       location: 'Paris',
       linkedin: 'lucas-bernard',
@@ -68,6 +72,7 @@ async function seed() {
     {
       name: 'Chloé Petit',
       email: 'chloe.petit@example.com',
+      password: 'chloe123',
       bio: "Product Manager avec 5 ans d'expérience tech.",
       location: 'Nantes',
       linkedin: 'chloe-petit',
@@ -80,6 +85,7 @@ async function seed() {
     {
       name: 'Maxime Roux',
       email: 'maxime.roux@example.com',
+      password: 'maxime123',
       bio: "DevOps Engineer passionné d'automatisation.",
       location: 'Lyon',
       linkedin: 'maxime-roux',
@@ -92,6 +98,7 @@ async function seed() {
     {
       name: 'Julie Moreau',
       email: 'julie.moreau@example.com',
+      password: 'julie123',
       bio: 'Développeuse mobile iOS et Android.',
       location: 'Toulouse',
       linkedin: 'julie-moreau',
@@ -104,6 +111,7 @@ async function seed() {
     {
       name: 'Alexandre Girard',
       email: 'alexandre.girard@example.com',
+      password: 'alex123',
       bio: 'Expert cybersécurité et ethical hacking.',
       location: 'Paris',
       linkedin: 'alexandre-girard',
@@ -115,13 +123,28 @@ async function seed() {
     }
   ];
 
-  // Insérer les talents
+  // Insérer les talents avec leurs comptes utilisateurs
   for (const talent of talentsData) {
-    // Insérer le talent
+    // Créer d'abord le compte utilisateur
+    const hashedPassword = await bcrypt.hash(talent.password, 10);
+    const userResult = db.prepare('INSERT OR IGNORE INTO users (email, password, name) VALUES (?, ?, ?)').run(talent.email, hashedPassword, talent.name);
+    
+    // Récupérer l'ID de l'utilisateur (créé ou existant)
+    const user = db.prepare('SELECT id FROM users WHERE email = ?').get(talent.email);
+    const userId = user.id;
+
+    // Vérifier si le talent existe déjà
+    const existingTalent = db.prepare('SELECT id FROM talents WHERE email = ?').get(talent.email);
+    if (existingTalent) {
+      console.log(`⏭️ Skipped (exists): ${talent.name}`);
+      continue;
+    }
+
+    // Insérer le talent lié à l'utilisateur
     const result = db.prepare(`
-      INSERT INTO talents (name, email, bio, location, linkedin, github, verified)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `).run(talent.name, talent.email, talent.bio, talent.location, talent.linkedin, talent.github, talent.verified);
+      INSERT INTO talents (user_id, name, email, bio, location, linkedin, github, verified)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(userId, talent.name, talent.email, talent.bio, talent.location, talent.linkedin, talent.github, talent.verified);
 
     const talentId = result.lastInsertRowid;
 
@@ -150,12 +173,23 @@ async function seed() {
       db.prepare('INSERT INTO projects (talent_id, title, description) VALUES (?, ?, ?)').run(talentId, project.title, project.description);
     }
 
-    console.log(`✅ Added: ${talent.name}`);
+    console.log(`✅ Added: ${talent.name} (user_id: ${userId})`);
   }
 
   // Save all changes to disk
   saveDatabase();
-  console.log('🎉 Database seeded successfully!');
+  
+  console.log('\n🎉 Database seeded successfully!');
+  console.log('\n📋 Comptes de test disponibles:');
+  console.log('   Admin: admin@cesi.fr / admin123');
+  console.log('   Sophie: sophie.martin@example.com / sophie123');
+  console.log('   Thomas: thomas.dubois@example.com / thomas123');
+  console.log('   Emma: emma.lefebvre@example.com / emma123');
+  console.log('   Lucas: lucas.bernard@example.com / lucas123');
+  console.log('   Chloé: chloe.petit@example.com / chloe123');
+  console.log('   Maxime: maxime.roux@example.com / maxime123');
+  console.log('   Julie: julie.moreau@example.com / julie123');
+  console.log('   Alexandre: alexandre.girard@example.com / alex123');
 }
 
 seed().catch(console.error);

@@ -51,4 +51,31 @@ export const talentsAPI = {
   getFavorites: () => request('/talents/user/favorites'),
 };
 
-export default { authAPI, talentsAPI };
+// Collaboration API
+export const collaborationAPI = {
+  // Envoyer une demande de collaboration
+  sendRequest: (receiverId, message) => request('/collaboration/request', {
+    method: 'POST',
+    body: JSON.stringify({ receiverId, message })
+  }),
+  
+  // Obtenir les demandes reçues
+  getReceived: () => request('/collaboration/received'),
+  
+  // Obtenir les demandes envoyées
+  getSent: () => request('/collaboration/sent'),
+  
+  // Compter les demandes en attente
+  getCount: () => request('/collaboration/count'),
+  
+  // Accepter une demande
+  accept: (id) => request(`/collaboration/${id}/accept`, { method: 'PUT' }),
+  
+  // Refuser une demande
+  reject: (id) => request(`/collaboration/${id}/reject`, { method: 'PUT' }),
+  
+  // Supprimer une demande
+  delete: (id) => request(`/collaboration/${id}`, { method: 'DELETE' }),
+};
+
+export default { authAPI, talentsAPI, collaborationAPI };

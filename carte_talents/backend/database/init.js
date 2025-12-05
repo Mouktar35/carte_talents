@@ -197,6 +197,21 @@ export async function initDatabase() {
     )
   `);
 
+  // Table des demandes de collaboration
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS collaboration_requests (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      sender_id INTEGER NOT NULL,
+      receiver_id INTEGER NOT NULL,
+      message TEXT NOT NULL,
+      status TEXT DEFAULT 'pending',
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (sender_id) REFERENCES users(id),
+      FOREIGN KEY (receiver_id) REFERENCES users(id)
+    )
+  `);
+
   console.log('✅ Database initialized successfully!');
   return db;
 }

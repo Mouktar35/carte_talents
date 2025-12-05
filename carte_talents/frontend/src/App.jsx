@@ -8,6 +8,7 @@ import CreateProfilePage from './components/CreateProfilePage';
 import MapView from './components/MapView';
 import SkillsCloud from './components/SkillsCloud';
 import CollaborationPage from './components/CollaborationPage';
+import InboxPage from './components/InboxPage';
 import AuthPage from './components/AuthPage';
 import { ToastContainer } from './components/Toast';
 import { useToast } from './hooks/useToast';
@@ -129,6 +130,13 @@ function AppContent() {
     });
   }, [sortBy]);
 
+  // Helper pour les toasts
+  const showToast = (message, type = 'info') => {
+    if (type === 'success') success(message);
+    else if (type === 'error') showError(message);
+    else info(message);
+  };
+
   const renderView = () => {
     if (view === 'auth') return <AuthPage setView={setView} />;
     
@@ -139,7 +147,8 @@ function AppContent() {
       case 'create': return <CreateProfilePage onAddTalent={addTalent} setView={setView} />;
       case 'map': return <MapView talents={talents} setView={setView} setCurrentProfile={setCurrentProfile} />;
       case 'cloud': return <SkillsCloud talents={talents} setView={setView} setCurrentProfile={setCurrentProfile} />;
-      case 'collaborate': return <CollaborationPage talents={talents} setView={setView} setCurrentProfile={setCurrentProfile} />;
+      case 'collaborate': return <CollaborationPage talents={talents} setView={setView} setCurrentProfile={setCurrentProfile} showToast={showToast} />;
+      case 'inbox': return <InboxPage showToast={showToast} />;
       default: return <HomePage setView={setView} getSkillCounts={getSkillCounts} stats={getStats()} />;
     }
   };
