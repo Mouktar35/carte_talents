@@ -148,7 +148,7 @@ function AppContent() {
       case 'map': return <MapView talents={talents} setView={setView} setCurrentProfile={setCurrentProfile} />;
       case 'cloud': return <SkillsCloud talents={talents} setView={setView} setCurrentProfile={setCurrentProfile} />;
       case 'collaborate': return <CollaborationPage talents={talents} setView={setView} setCurrentProfile={setCurrentProfile} showToast={showToast} />;
-      case 'inbox': return <InboxPage showToast={showToast} />;
+      case 'inbox': return <InboxPage showToast={showToast} setView={setView} />;
       default: return <HomePage setView={setView} getSkillCounts={getSkillCounts} stats={getStats()} />;
     }
   };
